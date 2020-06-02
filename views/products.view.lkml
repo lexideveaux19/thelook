@@ -25,7 +25,7 @@ view: products {
 
   dimension: item_name {
     type: string
-    sql: ${TABLE}.item_name ;;
+    sql: lower(${TABLE}.item_name) ;;
   }
 
   dimension: rank {

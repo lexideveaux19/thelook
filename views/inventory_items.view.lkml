@@ -15,6 +15,7 @@ view: inventory_items {
 
   dimension_group: created {
     type: time
+#     group_label: "Created"
     timeframes: [
       raw,
       time,
@@ -22,10 +23,22 @@ view: inventory_items {
       week,
       month,
       quarter,
-      year
+      year,month_name
     ]
     sql: ${TABLE}.created_at ;;
   }
+
+  measure: created_test {
+    type: date
+    sql: ${created_date} ;;
+  }
+
+  measure: max_date {
+    type: date
+    sql: MAX(${created_raw}) ;;
+    convert_tz: no
+  }
+
 
   dimension: product_id {
     type: number

@@ -1,3 +1,5 @@
+
+
 view: order_items {
   sql_table_name: demo_db.order_items ;;
   drill_fields: [id]
@@ -8,9 +10,11 @@ view: order_items {
     sql: ${TABLE}.id ;;
   }
 
+
+
   dimension: inventory_item_id {
     type: number
-    label: " "
+#     label: " "
     # hidden: yes
     sql: ${TABLE}.inventory_item_id ;;
   }
@@ -18,8 +22,26 @@ view: order_items {
   dimension: order_id {
     type: number
     # hidden: yes
-    sql: ${TABLE}.order_id ;;
+    sql: ${TABLE}.order_id;;
   }
+
+  measure: status_count {
+    view_label: "{% parameter orders.view_label %}"
+    type: count_distinct
+  }
+
+  dimension: test {
+    type: number
+    # hidden: yes
+    sql: case when ${TABLE}.order_id=3 or then 'yes' else 'no' end;;
+  }
+
+  dimension: testing {
+    type: number
+    # hidden: yes
+    sql: case when ${inventory_item_id}=25 or ${inventory_item_id}=27 then ${order_id} else null end;;
+  }
+
 
 
   dimension_group: returned {
@@ -56,6 +78,62 @@ view: order_items {
     type: number
     sql: ${TABLE}.sale_price ;;
     value_format_name: usd
+  }
+  measure: count_test {
+    type: count_distinct
+    sql: ${id} ;;
+    drill_fields: [orders.created_date, sale_price]
+    link: {
+      label: "Show as scatter plot"
+      url: "
+      {% assign vis_config = '{
+      \"stacking\" : \"\",
+      \"show_value_labels\" : false,
+      \"label_density\" : 25,
+      \"legend_position\" : \"center\",
+      \"x_axis_gridlines\" : true,
+      \"y_axis_gridlines\" : true,
+      \"show_view_names\" : false,
+      \"limit_displayed_rows\" : false,
+      \"y_axis_combined\" : true,
+      \"show_y_axis_labels\" : true,
+      \"show_y_axis_ticks\" : true,
+      \"y_axis_tick_density\" : \"default\",
+      \"y_axis_tick_density_custom\": 5,
+      \"show_x_axis_label\" : false,
+      \"show_x_axis_ticks\" : true,
+      \"x_axis_scale\" : \"auto\",
+      \"y_axis_scale_mode\" : \"linear\",
+      \"show_null_points\" : true,
+      \"point_style\" : \"circle\",
+      \"ordering\" : \"none\",
+      \"show_null_labels\" : false,
+      \"show_totals_labels\" : false,
+      \"show_silhouette\" : false,
+      \"totals_color\" : \"#808080\",
+      \"type\" : \"looker_scatter\",
+      \"interpolation\" : \"linear\",
+      \"series_types\" : {},
+      \"colors\": [
+      \"palette: Santa Cruz\"
+      ],
+      \"series_colors\" : {},
+      \"x_axis_datetime_tick_count\": null,
+      \"trend_lines\": [
+      {
+      \"color\" : \"#000000\",
+      \"label_position\" : \"left\",
+      \"period\" : 30,
+      \"regression_type\" : \"average\",
+      \"series_index\" : 1,
+      \"show_label\" : true,
+      \"label_type\" : \"string\",
+      \"label\" : \"30 day moving average\"
+      }
+      ]
+      }' %}
+      {{ link }}&vis_config={{ vis_config | encode_uri }}&toggle=dat,pik,vis&limit=5000"
+    }
   }
 
   dimension: transaction_tier {
@@ -115,16 +193,22 @@ view: order_items {
     ]
   }
 
-  measure: total_sale_price {
-    type: sum
-    sql: ${sale_price} ;;
-  }
-
   measure: average_sale_price {
     type: average
     sql: ${sale_price} ;;
+    value_format_name: "usd"
   }
 
+  measure: percent_complete {type: number sql: 1.0*(${count});;
+    html: <div style="float: left
+          ; width:{{ value | divided_by:2 }}
+          ; background-color: rgba(0,180,0,{{ value| divided_by:2 }})
+          ; text-align:left
+          ; color: #FFFFFF
+          ; border-radius: 5px"> <p style="margin-bottom: 0; margin-left: 4px;">{{ value | times:100 }}%</p>
+          </div>
+      ;;
+  }
 
   measure: least_expensive_item {
     type: min

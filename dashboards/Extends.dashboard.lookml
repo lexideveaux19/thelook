@@ -1,5 +1,6 @@
-- dashboard: base_dashboard
-  title: Base Dashboard
+- dashboard: extend_dashboard
+  title: Extend Dashboard
+  extends: base_dashboard
   layout: newspaper
   elements:
   - title: Price

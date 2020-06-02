@@ -2,6 +2,7 @@ connection: "thelook"
 
 # include all the views
 include: "/views/**/*.view"
+include: "/dashboards/**/*.dashboard"
 
 datagroup: the_look_proj_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -32,6 +33,10 @@ explore: inventory_items {
     sql_on: ${inventory_items.product_id} = ${products.id} ;;
     relationship: many_to_one
   }
+#   join: testing {
+#     from: products
+#     sql_on: ${inventory_items.product_id}=${products.id} ;;
+#   }
 }
 
 explore: order_items {
@@ -40,6 +45,7 @@ explore: order_items {
     sql_on: ${order_items.order_id} = ${orders.id} ;;
     relationship: many_to_one
   }
+
 
   join: inventory_items {
     type: left_outer
@@ -91,6 +97,8 @@ explore: user_data {
     relationship: many_to_one
   }
 }
+
+
 
 explore: users {}
 

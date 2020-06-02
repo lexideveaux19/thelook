@@ -33,6 +33,7 @@ view: pending_orders {
     sql: ${TABLE}.user_id ;;
   }
 
+
   measure: count {
     type: count
     drill_fields: [id, users.id, users.first_name, users.last_name]
