@@ -162,6 +162,7 @@ view: order_items {
     tiers: [1,2,3,6,9]
     style: integer
     sql: ${sale_price} ;;
+    value_format: "$#,##0"
   }
 
   dimension: price_range {

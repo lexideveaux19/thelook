@@ -32,6 +32,18 @@ view: orders {
     ELSE extract(month from ${created_date}) = extract(month from current_date) END;;
   }
 
+  dimension: year {
+    type: date
+    sql:    {% if created_year._in_query %}
+    ${created_month}
+  {% elsif created_quarter._in_query %}
+    ${created_month}
+  {% else %}
+    ${created_date}
+  {% endif %} ;;
+
+  }
+
 
 
 #   dimension: date_satisfies_filter {
@@ -54,7 +66,8 @@ view: orders {
 
   dimension: status {
     type: string
-    sql: ${TABLE}.status ;;
+    sql: case when ${TABLE}.status='cancelled' then 'cancelled'
+    when  ${TABLE}.status='pending' then 'pending' when  ${TABLE}.status='complete' then 'complete' else null end;;
 #     order_by_field: count
   }
 
@@ -104,7 +117,7 @@ view: orders {
 
   measure: count_coalesce {
     type: number
-    sql: coalesce(${count},0) ;;
+    sql: case when ${count}= null then ${count}=0 else ${count} end ;;
   }
 
     measure: count_set_1 {
