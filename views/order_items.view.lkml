@@ -11,7 +11,6 @@ view: order_items {
   }
 
 
-
   dimension: inventory_item_id {
     type: number
 #     label: " "

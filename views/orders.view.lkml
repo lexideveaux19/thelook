@@ -71,6 +71,26 @@ view: orders {
 #     order_by_field: count
   }
 
+  dimension: status_test {
+    sql: ${status};;
+#     html: {% if value == 'complete' %}
+#          <p><img src="http://findicons.com/files/icons/573/must_have/48/check.png" height=20 width=20> Complete </p>
+#       {% elsif value == 'pending' %}
+#         <p><img src="http://findicons.com/files/icons/1681/siena/128/clock_blue.png" height=20 width=20> Pending </p>
+#       {% else %}
+#         <p><img src="http://findicons.com/files/icons/719/crystal_clear_actions/64/cancel.png" height=20 width=20> Cancelled </p>
+#       {% endif %}
+# ;;
+     html:  {% if value == 'complete' %}
+        <p style="font-size: 20px; color : #FF0000"><img src="https://cdn1.iconfinder.com/data/icons/user-avatar-20/64/69-wander_woman-512.png" height=40 width=40> Seniors </p>
+      {% elsif value == 'pending' %}
+        <p style="font-size: 20px; color : #FF0000"><img src="https://cdn1.iconfinder.com/data/icons/user-avatar-20/64/69-wander_woman-512.png" height=40 width=40> Professionals </p>
+      {% else %}
+        <p style="font-size: 20px; color : #FF0000"><img src="https://cdn1.iconfinder.com/data/icons/user-avatar-20/64/69-wander_woman-512.png" height=40 width=40>{{ rendered_value }}</p>
+      {% endif %}
+    ;;
+  }
+
   parameter: view_label {
     type: string
     default_value: "cancelled"
